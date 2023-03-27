@@ -1,0 +1,68 @@
+create database Grosvenor;
+CREATE TABLE hotel ( hotel_no CHAR(4) NOT NULL, name VARCHAR(20) NOT NULL, address
+
+VARCHAR(50) NOT NULL,primary key (hotel_no));
+
+CREATE TABLE room ( room_no VARCHAR(4) NOT NULL, hotel_no CHAR(4) NOT NULL, type CHAR(1)
+
+NOT NULL, price DECIMAL(5,2) NOT NULL,primary key (room_no, hotel_no),
+
+foreign key (hotel_no) REFERENCES hotel(hotel_no));
+
+CREATE TABLE booking (hotel_no CHAR(4) NOT NULL, guest_no CHAR(4) NOT NULL, date_from
+
+DATETIME NOT NULL, date_to DATETIME NULL, room_no CHAR(4) NOT NULL,primary key (hotel_no, guest_no, date_from),
+
+foreign key (room_no, hotel_no) REFERENCES room(room_no, hotel_no),
+
+foreign key (guest_no) REFERENCES guest(guest_no));  
+
+CREATE TABLE guest ( guest_no CHAR(4) NOT NULL, name VARCHAR(20) NOT NULL, address
+
+VARCHAR(50) NOT NULL,primary key (guest_no));
+
+insert into hotel values('H111','Grosvenor Hotel','London ');
+insert into hotel values('H112', 'The Tower Hotel','London ');
+insert into hotel values('H113', 'Hard Rock Hotel','London ');
+insert into hotel values('CH01', 'Hilton Sydney','Sydney ');
+insert into hotel values('CH02', 'Crown Plaza','Dubai ');
+insert into hotel values('M001', 'The Taj Mahal Tower','Mumbai ');
+
+insert into room values(101 , 'H111 ', 'S ',72.00  );
+insert into room values(202 , 'H111 ', 'D ',95.00 );
+insert into room values(201 , 'H112 ', 'S ', 68.00 );
+insert into room values(404 , 'H113 ', 'D ', 90.00  );
+insert into room values(1001, 'CH01 ', 'S ', 70.00 );
+insert into room values(107 , 'CH02 ', 'F ',76.00  );
+insert into room values(608 , 'M001 ','S ', 60.00 );
+insert into room values(1006 , 'M001 ', 'F ', 88.00 );
+
+insert into guest values('G111' , 'John Smith ', 'Glasgow ');
+insert into guest values('G112', ' Arving Goja ', ' Mumbai ');
+insert into guest values('M112', ' Thomas Shelby ', ' England ');
+insert into guest values('M113' , 'Mary Murphy ', ' London');
+insert into guest values('GH11' , 'Sonali Jain ', 'Pune ');
+insert into guest values('CH22' , ' Arham Khan ', '  Pakistan ');
+insert into guest values('GH22' , 'John Doe', 'Berlin');
+insert into guest values( 'S111', 'Robert Hook', 'Sydney');
+
+insert into booking values('H111','G111'  , DATE '1999-01-01 ',DATE'1999-01-02',101 );
+insert into booking values('H112','G112'  ,DATE'1999-02-01', DATE'1999-02-05', 201);
+insert into booking values('H113','M112'  , DATE'2000-03-12', DATE'2000-03-16',404 );
+insert into booking values('CH01','M113'  ,DATE '1999-09-12', DATE'1999-09-14',1001);
+insert into booking values('CH02','GH11'  , DATE'2003-04-02', DATE'2003-04-04', 107);
+insert into booking values('M001','CH22'  , DATE'2000-08-22', DATE'2000-08-26',608 );
+insert into booking values('H111','GH22'  , DATE'2001-05-01', DATE'2001-05-04' ,202 );
+insert into booking values('M001','S111'  ,  DATE'1999-04-02', DATE'1999-04-05',1006 );
+
+UPDATE room SET price = price*1.05;
+UPDATE room SET price = price + price*0.05;
+
+
+CREATE TABLE booking_old ( hotel_no CHAR(4) NOT NULL, guest_no CHAR(4) NOT NULL, date_from DATETIME NOT NULL, date_to DATETIME NULL, room_no VARCHAR(4) NOT NULL);
+
+INSERT INTO booking_old (SELECT * FROM booking WHERE date_to < DATE'2000-01-01'); 
+DELETE FROM booking WHERE date_to < DATE('2000-01-01');
+
+
+ 
