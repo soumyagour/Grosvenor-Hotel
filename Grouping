@@ -1,0 +1,33 @@
+1. List the number of rooms in each hotel.
+  SELECT hotel_no, COUNT(room_no) AS count FROM room
+  GROUP BY hotel_no;
+
+
+2. List the number of rooms in each hotel in London.
+  SELECT hotel.hotel_no, COUNT(room_no)
+  AS count FROM hotel, room
+  WHERE room.hotel_no = hotel.hotel_no
+  AND address LIKE '%London%'
+  GROUP BY hotel_no;
+
+3. What is the average number of bookings for each hotel in August?
+  SELECT AVG(X) AS AveNumBook FROM
+  (SELECT hotel_no, COUNT(hotel_no) AS X FROM booking b
+  WHERE (b.date_from >= DATE'2000-08-01' AND b.date_from <= DATE'2000-08-31')
+  GROUP BY hotel_no) As Another;
+
+4. What is the most commonly booked room type for each hotel in London?
+  SELECT Type, COUNT(*) AS TypeCount
+  FROM  booking B, hotel H, room R
+  WHERE r.room_no = b.room_no AND b.hotel_no = h.hotel_no AND
+  h.address LIKE '%London%'
+  GROUP BY type;
+
+5. What is the lost income from unoccupied rooms at each hotel today?
+ SELECT hotel_no, SUM(price) FROM room r
+ WHERE room_no NOT IN
+ (SELECT room_no FROM booking b, hotel h
+ WHERE (date_from <= CURRENT_DATE AND
+ date_to >= CURRENT_DATE) AND
+ b.hotel_no = h.hotel_no)
+ GROUP BY hotel_no;
