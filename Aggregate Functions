@@ -1,0 +1,11 @@
+#1. How many hotels are there? 
+SELECT COUNT(*) FROM hotel;
+
+#2. What is the average price of a room? 
+SELECT AVG(price) FROM room;
+
+#3. What is the total revenue per night from all double rooms?
+SELECT SUM(price) FROM room WHERE type = 'D';
+
+#4. How many different guests have made bookings for August?
+SELECT COUNT(DISTINCT guest_no) FROM booking WHERE (date_from >= '2000-08-01' AND date_from <= '2000-08-31');
