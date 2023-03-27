@@ -1,0 +1,22 @@
+ -- List the price and type of all rooms at the Grosvenor Hotel.--
+ SELECT price, type FROM room WHERE hotel_no = (SELECT hotel_no FROM hotel WHERE name = 'Grosvenor Hotel');
+ 
+ -- List all guests currently staying at the Grosvenor Hotel.--
+SELECT * FROM guest WHERE guest_no = (SELECT guest_no FROM booking WHERE date_from <= CURRENT_DATE AND date_to >= CURRENT_DATE AND hotel_no = (SELECT hotel_no FROM hotel
+WHERE name = 'Grosvenor Hotel'));
+
+-- List the details of all rooms at the Grosvenor Hotel, including the name of the guest staying in the room, if the room is occupied.
+SELECT r.* FROM room r LEFT JOIN
+(SELECT g.name, h.hotel_no, b.room_no FROM Guest g, Booking b, Hotel h WHERE g.guest_no = b.guest_no AND b.hotel_no = h.hotel_no AND
+h.name= 'Grosvenor Hotel' AND b.date_from <= CURRENT_DATE AND b.date_to >= CURRENT_DATE) AS XXX
+ON r.hotel_no = XXX.hotel_no AND r.room_no = XXX.room_no;
+
+#What is the total income from bookings for the Grosvenor Hotel today--
+
+SELECT SUM(price) FROM booking b, room r, hotel h WHERE (b.date_from <= CURRENT_DATE AND
+b.date_to >= CURRENT_DATE) AND r.hotel_no = h.hotel_no AND r.room_no = b.room_no;
+
+#List the rooms that are currently unoccupied at the Grosvenor Hotel.--
+
+SELECT * FROM room r WHERE room_no NOT IN (SELECT room_no FROM booking b, hotel h
+WHERE (date_from <= CURRENT_DATE AND date_to >= CURRENT_DATE) AND b.hotel_no = h.hotel_no AND name = 'Grosvenor Hotel');
